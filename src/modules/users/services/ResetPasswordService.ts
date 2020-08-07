@@ -4,7 +4,7 @@ import { differenceInHours } from 'date-fns';
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
-import IUsersTokenRepository from '../repositories/IUsersTokenRepository';
+import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
 interface IRequest {
   token: string;
@@ -17,15 +17,15 @@ class ResetPasswordService {
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 
-    @inject('UsersTokenRepository')
-    private usersTokenRepository: IUsersTokenRepository,
+    @inject('UserTokensRepository')
+    private userTokensRepository: IUserTokensRepository,
 
     @inject('HashProvider')
     private hashProvider: IHashProvider
   ) {}
 
   public async execute({ token, password }: IRequest): Promise<void> {
-    const userToken = await this.usersTokenRepository.findBytoken(token);
+    const userToken = await this.userTokensRepository.findByToken(token);
 
     if (!userToken) {
       throw new AppError('User token does not exists.');

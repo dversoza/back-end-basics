@@ -1,22 +1,22 @@
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import AppError from '@shared/errors/AppError';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import FakeUsersTokenRepository from '../repositories/fakes/FakeUsersTokenRepository';
+import FakeUserTokensRepository from '../repositories/fakes/FakeUserTokensRepository';
 import ResetPasswordService from './ResetPasswordService';
 
 let fakeUsersRepository: FakeUsersRepository;
-let fakeUsersTokenRepository: FakeUsersTokenRepository;
+let fakeUserTokensRepository: FakeUserTokensRepository;
 let resetPassword: ResetPasswordService;
 let fakeHashProvider: FakeHashProvider;
 
 describe('ResetPasswordService', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
-    fakeUsersTokenRepository = new FakeUsersTokenRepository();
+    fakeUserTokensRepository = new FakeUserTokensRepository();
     fakeHashProvider = new FakeHashProvider();
     resetPassword = new ResetPasswordService(
       fakeUsersRepository,
-      fakeUsersTokenRepository,
+      fakeUserTokensRepository,
       fakeHashProvider
     );
   });
@@ -28,7 +28,7 @@ describe('ResetPasswordService', () => {
       password: '123456',
     });
 
-    const { token } = await fakeUsersTokenRepository.generate(user.id);
+    const { token } = await fakeUserTokensRepository.generate(user.id);
 
     const generateHash = jest.spyOn(fakeHashProvider, 'generateHash');
 
@@ -53,7 +53,7 @@ describe('ResetPasswordService', () => {
   });
 
   it('should not be able to reset the password with non-existing user', async () => {
-    const { token } = await fakeUsersTokenRepository.generate(
+    const { token } = await fakeUserTokensRepository.generate(
       'non-existing-user'
     );
 
@@ -72,7 +72,7 @@ describe('ResetPasswordService', () => {
       password: '123456',
     });
 
-    const { token } = await fakeUsersTokenRepository.generate(user.id);
+    const { token } = await fakeUserTokensRepository.generate(user.id);
 
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       const futureDate = new Date();

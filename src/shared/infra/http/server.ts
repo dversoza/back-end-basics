@@ -14,7 +14,6 @@ import '@shared/container';
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
 app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes);
@@ -26,7 +25,8 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
       message: err.message,
     });
   }
-  return response.status(400).json({
+  console.log(err);
+  return response.status(500).json({
     status: 'error',
     message: 'Internal Server Error!',
   });
